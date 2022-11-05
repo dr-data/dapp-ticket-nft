@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "npx hardhat compile --network localhost && tsc && vite build",
+    "clean": "npx hardhat clean",
     "dev": "vite",
     "lint:sol": "npx solhint 'contracts/**/*.sol'",
     "prepare": "husky install",
@@ -15,6 +16,7 @@
     "package.json": "sort-package-json"
   },
   "dependencies": {
+    "@mui/x-date-pickers": "^5.0.7",
     "@sentry/react": "7.17.4",
     "@sentry/tracing": "7.17.4",
     "@tailwindcss/typography": "0.5.7",
@@ -24,6 +26,7 @@
     "@web3-react/walletconnect-connector": "6.2.13",
     "daisyui": "2.38.0",
     "loglevel": "1.8.0",
+    "moment": "^2.29.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "2.4.0",

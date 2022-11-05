@@ -2,7 +2,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import React from "react";
 
 import "./App.css";
-import SimpleStoreApp from "./SimpleStoreApp";
+import TicketNFT from "./TicketNFT";
 import Demo from "./components/Demo";
 import { getLibrary } from "./components/Demo";
 
@@ -14,7 +14,7 @@ function App() {
       <div className="App">
         <Demo />
         <header className="App-header">
-          <SimpleStoreApp contractAddress={VITE_EVENT_ADDRESS} />
+          <TicketNFT contractAddress={VITE_EVENT_ADDRESS} />
         </header>
         <footer className="p-10 footer bg-base-200 text-base-content">
           <div>

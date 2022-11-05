@@ -112,11 +112,50 @@ export interface EventInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
+    "NewEvent(uint256,string,string,string,string,address,uint64,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewEvent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+
+export interface NewEventEventObject {
+  eventId: BigNumber;
+  name: string;
+  location: string;
+  description: string;
+  image: string;
+  eventManager: string;
+  priceUnit: BigNumber;
+  startDay: BigNumber;
+  endDay: BigNumber;
+}
+export type NewEventEvent = TypedEvent<
+  [
+    BigNumber,
+    string,
+    string,
+    string,
+    string,
+    string,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ],
+  NewEventEventObject
+>;
+
+export type NewEventEventFilter = TypedEventFilter<NewEventEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -270,6 +309,32 @@ export interface Event extends BaseContract {
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
+    "NewEvent(uint256,string,string,string,string,address,uint64,uint256,uint256)"(
+      eventId?: null,
+      name?: null,
+      location?: null,
+      description?: null,
+      image?: null,
+      eventManager?: null,
+      priceUnit?: null,
+      startDay?: null,
+      endDay?: null
+    ): NewEventEventFilter;
+    NewEvent(
+      eventId?: null,
+      name?: null,
+      location?: null,
+      description?: null,
+      image?: null,
+      eventManager?: null,
+      priceUnit?: null,
+      startDay?: null,
+      endDay?: null
+    ): NewEventEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null

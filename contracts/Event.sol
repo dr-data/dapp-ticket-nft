@@ -1,18 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract Event is Ownable {
+contract Event is Ownable, Initializable {
 	using Counters for Counters.Counter;
 	Counters.Counter private eventIds;
 
-	// TicketClass ticketClass;
-
-	constructor() {
-		// ticketClass = new TicketClass(this);
-	}
+	constructor() {}
 
 	struct EventData {
 		string name; // Name of event
@@ -26,8 +23,20 @@ contract Event is Ownable {
 		bool disable;
 	}
 
-	mapping(address => mapping(uint256 => EventData)) private listEventData; // Each event of event manager
-	mapping(address => bool) private approvedEventManager;
+	mapping(address => mapping(uint256 => EventData)) listEventData; // Each event of event manager
+	mapping(address => bool) approvedEventManager;
+
+	event NewEvent(
+		uint256 eventId,
+		string name,
+		string location,
+		string description,
+		string image,
+		address eventManager,
+		uint64 priceUnit,
+		uint256 startDay,
+		uint256 endDay
+	);
 
 	// Modifiers
 	modifier isEventManager() {
@@ -39,7 +48,6 @@ contract Event is Ownable {
 	}
 
 	// Function
-
 	/**
 	 * @dev Allows the Contract admin to approve the Event Manager
 	 * @notice onlyOwner modifier should be invoked
@@ -77,28 +85,32 @@ contract Event is Ownable {
 		uint256 startDate_,
 		uint256 endDate_
 	) external isEventManager returns (uint256) {
-		// uint256 currentEventId = eventIds.current();
+		uint256 currentEventId = eventIds.current();
 
-		listEventData[msg.sender][1].name = name_;
-		listEventData[msg.sender][1].location = location_;
-		listEventData[msg.sender][1].description = description_;
-		listEventData[msg.sender][1].image = image_;
-		listEventData[msg.sender][1].eventManager = msg.sender;
-		listEventData[msg.sender][1].priceUnit = priceUnit_;
-		listEventData[msg.sender][1].startDay = startDate_;
-		listEventData[msg.sender][1].endDay = endDate_;
-		listEventData[msg.sender][1].disable = false;
-		// eventIds.increment();
-		// emit NewEvent(
-		//     name_,
-		//     msg.sender,
-		//     priceUnit_,
-		//     totalTicketClasses_,
-		//     startDate_,
-		//     endDate_
-		// );
+		listEventData[msg.sender][currentEventId].name = name_;
+		listEventData[msg.sender][currentEventId].location = location_;
+		listEventData[msg.sender][currentEventId].description = description_;
+		listEventData[msg.sender][currentEventId].image = image_;
+		listEventData[msg.sender][currentEventId].eventManager = msg.sender;
+		listEventData[msg.sender][currentEventId].priceUnit = priceUnit_;
+		listEventData[msg.sender][currentEventId].startDay = startDate_;
+		listEventData[msg.sender][currentEventId].endDay = endDate_;
+		listEventData[msg.sender][currentEventId].disable = false;
+		eventIds.increment();
 
-		return 1;
+		emit NewEvent(
+			currentEventId,
+			name_,
+			location_,
+			description_,
+			image_,
+			msg.sender,
+			priceUnit_,
+			startDate_,
+			endDate_
+		);
+
+		return currentEventId;
 	}
 
 	function viewEventDetails(uint64 eventID_)
